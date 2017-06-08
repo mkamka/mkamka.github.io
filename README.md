@@ -104,6 +104,3 @@ I received the stand readymade, only needing a power supply and other cable conn
 
 ## The Flow
 User opens the Android app. User searches for available devices. The App will only connect to Bluno devices. When a device is found and the connection is made, user has access to a view where he can control the stand rotation. User can then disconnect from the device, and after he is routed to the same search view he was in first.
-+
-+
-+
