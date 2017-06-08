@@ -12,13 +12,92 @@ This documentation describes the assignment and creation of an Android app that 
 
 The Android application is based on DfRobot's [BlunoBasicDemo](https://github.com/DFRobot/BlunoBasicDemo)- demo app.
 
+### The Source
+[github](https://github.com/mkamka/CameraBlunoApp)
+
 ## The Arduino Application
 
 The app uses servo.h library for Arduino to connect to and control the servos. Otherwise it is a very simple implementation. The basic idea is that it reads character from serial connection and moves the servos based on the char it receives.
+#### The Source
+```c
+#include <Servo.h>
+
+Servo servoHorizontal;
+Servo servoVertical;
+
+int horPos = 0;
+int verPos = 0;
+
+void setup() {
+   pinMode(A0, OUTPUT);
+   pinMode(A1, OUTPUT);
+   servoHorizontal.attach(A0); //analog pin 0
+   servoHorizontal.write(horPos);
+
+  servoVertical.attach(A1); //analog pin 1
+  servoVertical.write(verPos);
+  Serial.begin(115200);  //initial the Serial
+}
+
+void loop() {
+  if (Serial.available())  {
+    int lastCmd;
+    char command = Serial.read();
+    switch (command) {
+      case 'u':
+        lastCmd = servoVertical.read();
+        if(lastCmd <= 175) {
+          servoVertical.write(lastCmd + 5);
+          delay(30);
+          Serial.println(lastCmd + 5);
+        } else {
+          Serial.println("Yläpäässä");
+        }
+        break;
+      case 'd':
+        lastCmd = servoVertical.read();
+        if(lastCmd >= 5) {
+          servoVertical.write(lastCmd - 5);
+          delay(30);
+          Serial.println(lastCmd - 5);
+        } else {
+          Serial.println("Alapäässä");
+        }
+        break;
+      case 'l':
+        lastCmd = servoHorizontal.read();
+        if(lastCmd >= 5) {
+          servoHorizontal.write(lastCmd - 5);
+          delay(30);
+          Serial.println(lastCmd - 5);
+        } else {
+          Serial.println("Vasemmalla");
+        }
+        break;
+      case 'r':
+        lastCmd = servoHorizontal.read();
+        if(lastCmd <= 175) {
+          servoHorizontal.write(lastCmd + 5);
+          delay(30);
+          Serial.println(lastCmd + 5);
+        } else {
+          Serial.println("Oikealla");
+        }
+        break;
+       case 'i':
+          servoHorizontal.write(0);
+          servoVertical.write(0);
+          delay(1500);
+          Serial.println("initialize");
+        break;
+      }
+  }
+}
+```
 
 ## Bluno Beetle
 
-The Beetle is connected is connected to servos from pins A0 and A1. It can be programmed using The Arduino IDE though its usb micro connector.
+The Beetle is connected to the servos from pins A0 and A1. It can be programmed using The Arduino IDE though its usb micro connector.
 
 ## Camera stand
 I received the stand readymade, only needing a power supply and other cable connections.
